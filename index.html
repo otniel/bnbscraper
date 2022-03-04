@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <title></title>
+</head>
+<body>
+      <div id="app" class="container mx-auto bg-white border-grey-light border mt-20">
+        <accordion v-for="(value, key, index) in json" v-bind:title="key">
+          <div v-for="item in value"> 
+            <span>
+            <a target="_blank"  v-bind:href="item.link"> {{item.name}} - {{item.item_type}} </a> 
+            Precio Original: {{ item.price }} Precio con Descuento: {{ item.price_promo }}
+            </span>
+          </div>
+        </accordion>
+      </div><!-- #app -->
+  </div>
+
+
+</div>
+  <script>
+    var accordion = {
+          props: ['title'],
+          data() {
+                return { active: false }
+          },
+  template: `
+            <div class="">
+                <div class="tab__header">
+                    <a href="#" class="tab__link p-4 block bg-blue-dark hover:bg-blue-darker no-underline text-white border-b-2 border-white flex justify-between" @click.prevent="active = !active">
+                        <strong>{{title}}</strong>
+                        <span class="down-Arrow" v-show="!active">&#9660;</span>
+                        <span class="up-Arrow" v-show="active">&#9650;</span>
+                    </a>
+                </div>
+                <div class="tab__content p-2" v-show="active"><slot /></div>
+            </div>
+`
+}
+
+var app = new Vue({
+  el: '#app',
+      data: {
+        message: 'Hello Vue!',
+        json: null
+      },
+      created: function () {
+        fetch("/data.json")
+          .then(r => r.json())
+          .then(json => {
+            this.json = json;
+          })
+        },
+  components: {
+    accordion
+  }
+});
+  </script>
+</body>
+
+</html>
